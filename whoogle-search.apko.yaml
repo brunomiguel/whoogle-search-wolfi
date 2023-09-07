@@ -13,7 +13,6 @@ contents:
     - ca-certificates
     - wolfi-base
     - python-3.11
-    - util-linux-dev
 
 entrypoint:
   command: /usr/bin/whoogle-search --debug
