@@ -64,6 +64,6 @@ pipeline:
       cp run "${{targets.destdir}}"/usr/share/"${{package.name}}"/run
       cp whoogle-search/whoogle.default "${{targets.destdir}}"/etc/default/whoogle
       cp whoogle-search/whoogle.conf "${{targets.destdir}}"/usr/lib/sysusers.d/whoogle.conf
-      install -Dm755 whoogle-search/whoogle.bin "${{targets.destdir}}"/usr/bin/whoogle-search
+      cp whoogle-search/whoogle.bin "${{targets.destdir}}"/usr/bin/whoogle-search
 
   - uses: strip
