@@ -44,7 +44,6 @@ pipeline:
       # Using upstream instruction
       python -m venv venv
       source venv/bin/activate
-      # pip install -r requirements.txt
 
       # Cleanup
       rm -r docs test .dockerignore .gitignore .replit docker-compose.yml Dockerfile heroku.yml MANIFEST.in README.md requirements.txt .git
@@ -66,4 +65,4 @@ pipeline:
       cp whoogle-search/whoogle.conf "${{targets.destdir}}"/usr/lib/sysusers.d/whoogle.conf
       cp whoogle-search/whoogle.bin "${{targets.destdir}}"/usr/bin/whoogle-search
 
-  #- uses: strip
+  - uses: strip
