@@ -1,2 +1,5 @@
 melange.rsa
 melange.rsa.pub
+build
+packages
+sb*
