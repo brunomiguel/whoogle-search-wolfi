@@ -1,0 +1,9 @@
+#!/bin/bash
+set -x
+
+source /etc/default/whoogle
+
+cd /usr/share/whoogle-search
+
+venv/bin/python -v -um app --host $BIND_ADDRESS --port $LISTEN_PORT
+

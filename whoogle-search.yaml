@@ -1,0 +1,70 @@
+package:
+  name: whoogle-search
+  version: 0.8.3
+  epoch: 0
+  description: "A self-hosted, ad-free, privacy-respecting metasearch engine."
+  copyright:
+    - license: MIT
+  dependencies:
+    runtime:
+      - python-3.11
+      - bash
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/bootstrap/stage3
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/bootstrap/stage3/wolfi-signing.rsa.pub
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - ca-certificates-bundle
+      - wolfi-base
+      - busybox
+      - build-base
+      - py3.11-pip
+      - python-3.11
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/benbusby/whoogle-search
+      tag: v${{package.version}}
+      expected-commit: 92e8ede24e9277a5440d403f75877209f1269884
+
+  - name: Configure and build
+    runs: |
+      mkdir -p "${{targets.destdir}}"/usr/bin
+      mkdir -p "${{targets.destdir}}"/usr/share/${{package.name}}
+      mkdir -p "${{targets.destdir}}"/usr/share/licenses/${{package.name}}
+      mkdir -p "${{targets.destdir}}"/usr/lib/sysusers.d/
+      mkdir -p "${{targets.destdir}}"/etc/default
+
+      # Using upstream instruction
+      python3 -m venv venv
+      source venv/bin/activate
+      # pip install -r requirements.txt
+      pip install --no-warn-script-location --no-cache-dir -r requirements.txt
+
+      # Cleanup
+      rm -r docs test .dockerignore .gitignore .replit docker-compose.yml Dockerfile heroku.yml MANIFEST.in README.md requirements.txt .git
+
+      # Set permissions
+      chmod +x whoogle-search/whoogle.bin
+      chmod +x venv/bin/python
+
+      # Copy/move needed files and folders
+      mv app "${{targets.destdir}}"/usr/share/${{package.name}}/app
+      mv venv "${{targets.destdir}}"/usr/share/${{package.name}}/venv
+      mv charts "${{targets.destdir}}"/usr/share/${{package.name}}/charts
+      mv misc "${{targets.destdir}}"/usr/share/${{package.name}}/misc
+      cp app.json "${{targets.destdir}}"/usr/share/${{package.name}}/app.json
+      cp pyproject.toml "${{targets.destdir}}"/usr/share/${{package.name}}/pyproject.toml
+      cp LICENSE "${{targets.destdir}}"/usr/share/licenses/"${{package.name}}"/LICENSE
+      cp run "${{targets.destdir}}"/usr/share/"${{package.name}}"/run
+      cp whoogle-search/whoogle.default "${{targets.destdir}}"/etc/default/whoogle
+      cp whoogle-search/whoogle.conf "${{targets.destdir}}"/usr/lib/sysusers.d/whoogle.conf
+      install -Dm755 whoogle-search/whoogle.bin "${{targets.destdir}}"/usr/bin/whoogle-search
+
+  - uses: strip
