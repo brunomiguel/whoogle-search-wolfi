@@ -44,8 +44,7 @@ pipeline:
       # Using upstream instruction
       python3 -m venv venv
       source venv/bin/activate
-      # pip install -r requirements.txt
-      pip install --no-warn-script-location --no-cache-dir -r requirements.txt
+      pip install -r requirements.txt
 
       # Cleanup
       rm -r docs test .dockerignore .gitignore .replit docker-compose.yml Dockerfile heroku.yml MANIFEST.in README.md requirements.txt .git
